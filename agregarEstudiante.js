@@ -6,16 +6,22 @@ const cursoEstudiante = args[3]
 const nivelEstudiante = args[4]
 
 
-const agregarEstudiante = async (client) => {
-    try {
-        await client.connect()
-        const res = await client.query(`INSERT INTO estudiantes(nombre, rut, curso, nivel) VALUES('${nombreEstudiante}', '${rutEstudiante}', '${cursoEstudiante}', ${nivelEstudiante}) RETURNING *`)
-        console.log(`Estudiante ${nombreEstudiante} agregado/a con éxito!`)
-        await client.end()
-    } catch (error) {
-        console.log(error)
-        await client.end()
+const agregarEstudiante = async (client, release, pool) => {
+    const SQLQuery = {
+        text: "INSERT INTO estudiantes(nombre, rut, curso, nivel) VALUES($1, $2, $3, $4) RETURNING *",
+        values: [`${nombreEstudiante}`, `${rutEstudiante}`, `${cursoEstudiante}`, `${nivelEstudiante}`],
+        name: "add-student", // Prepared Statement
     }
+    await client.query(SQLQuery, (error_consulta, res) => {
+        if(error_consulta) {
+            console.error('¡HUBO UN ERROR! Revise el siguiente código:', error_consulta.code)
+            pool.end()
+        } else {
+            console.log(`Estudiante ${nombreEstudiante} agregado/a con éxito!`)
+            release()
+            pool.end()
+        }
+    })
 }
 
 module.exports = agregarEstudiante
