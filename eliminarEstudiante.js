@@ -4,13 +4,13 @@ const rutEstudiante = args[1]
 
 const eliminarEstudiante = async (client, release, pool) => {
     const SQLQuery = {
-        text: "DELETE FROM estudiantes WHERE rut = $1 RETURNING *",
-        name: "delete-student", // Prepared Statement
-        values: [`${rutEstudiante}`],
+        text: 'DELETE FROM estudiantes WHERE rut = $1 RETURNING *',
+        name: 'delete-student', // Prepared Statement
+        values: [rutEstudiante],
     }
-    await client.query(SQLQuery, (error_consulta, res) => {
-        if(error_consulta) {
-            console.error('¡HUBO UN ERROR! Revise el siguiente código:', error_consulta.code)
+    await client.query(SQLQuery, (errorConsulta, res) => {
+        if(errorConsulta) {
+            console.error('¡HUBO UN ERROR! Revise el siguiente código:', errorConsulta.code)
             pool.end()
         } else if (res.rowCount === 0) {
             console.log(`No se pudo eliminar el/la estudiante con el rut ingresado (${rutEstudiante}), ya que, no se encuentra registrado/a. Verifique el rut.`)
