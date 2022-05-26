@@ -24,15 +24,6 @@ const editarEstudiante = async (client, release, pool) => {
             pool.end()
         }
     })
-    /*try {
-        await client.connect()
-        const res = await client.query(`UPDATE estudiantes SET nombre = '${nombreEstudiante}', curso = '${cursoEstudiante}', nivel = '${nivelEstudiante}' WHERE rut = '${rutEstudiante}' RETURNING *`)
-        console.log(`Estudiante ${nombreEstudiante} editado/a con éxito!`)
-        await client.end()
-    } catch(error) {
-        console.log(error)
-        await client.end()
-    }*/
 }
 
 module.exports = editarEstudiante
